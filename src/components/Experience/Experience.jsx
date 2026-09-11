@@ -1,93 +1,104 @@
 import React from "react";
-import { experiences } from "../../constants"; // Import your data
+import { experiences } from "../../constants";
 
 const Experience = () => {
   return (
     <section
       id="experience"
-      className="py-24 pb-24 px-[12vw] md:px-[7vw] lg:px-[16vw] font-sans bg-skills-gradient clip-path-custom-2"
+      className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto font-sans bg-skills-gradient clip-path-custom-2"
     >
       {/* Section Title */}
-      <div className="text-center mb-16">
-        <h2 className="text-4xl font-bold text-white">EXPERIENCE</h2>
-        <div className="w-32 h-1 bg-purple-500 mx-auto mt-4"></div>
-        <p className="text-gray-400 mt-4 text-lg font-semibold">
-          A collection of my work experience and the roles I have taken in
-          various organizations
+      <div className="text-center mb-12 sm:mb-16">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+          EXPERIENCE
+        </h2>
+        <div className="w-24 sm:w-32 h-1.5 bg-gradient-to-r from-purple-600 to-pink-500 mx-auto mt-3 rounded-full"></div>
+        <p className="text-gray-300/80 mt-4 text-sm sm:text-base md:text-lg max-w-2xl mx-auto font-normal">
+          A showcase of my professional work experience, roles, and real-world impact across organizations.
         </p>
       </div>
 
       {/* Experience Timeline */}
       <div className="relative">
-        {/* Vertical line */}
-        <div className="absolute sm:left-1/2 left-0 transform -translate-x-1/2 sm:-translate-x-0 w-1 bg-white h-full"></div>
+        {/* Continuous Vertical Timeline Spine */}
+        <div className="absolute left-4 sm:left-6 md:left-1/2 top-4 bottom-4 w-0.5 md:-translate-x-1/2 bg-gradient-to-b from-purple-600 via-pink-500 to-purple-800"></div>
 
         {/* Experience Entries */}
-        {experiences.map((experience, index) => (
-          <div
-            key={experience.id}
-            className={`flex flex-col sm:flex-row items-center mb-16 ${
-              index % 2 === 0 ? "sm:justify-end" : "sm:justify-start"
-            }`}
-          >
-            {/* Timeline Circle */}
-            <div className="absolute sm:left-1/2 left-0 transform -translate-x-1/2 bg-gray-400 border-4 border-[#8245ec] w-12 h-12 sm:w-16 sm:h-16 rounded-full flex justify-center items-center z-10">
-              <img
-                src={experience.img}
-                alt={experience.company}
-                className="w-full h-full object-cover rounded-full"
-              />
-            </div>
+        <div className="space-y-10 sm:space-y-12 md:space-y-14">
+          {experiences.map((experience, index) => {
+            const isEven = index % 2 === 0;
 
-            {/* Content Section */}
-            <div
-              className={`w-full sm:max-w-md p-4 sm:p-8 rounded-2xl shadow-2xl border border-white bg-gray-900 backdrop-blur-md shadow-[0_0_20px_1px_rgba(130,69,236,0.3)] ${
-                index % 2 === 0 ? "sm:ml-0" : "sm:mr-0"
-              } sm:ml-44 sm:mr-44 ml-8 transform transition-transform duration-300 hover:scale-105`}
-            >
-              {/* Flex container for image and text */}
-              <div className="flex items-center space-x-6">
-                {/* Company Logo/Image */}
-                <div className="w-16 h-16 bg-white rounded-md overflow-hidden">
+            return (
+              <div
+                key={experience.id}
+                className="relative flex flex-col md:flex-row items-start md:items-center"
+              >
+                {/* Timeline Circle Node */}
+                <div className="absolute left-4 sm:left-6 md:left-1/2 top-6 md:top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0d081f] border-2 sm:border-4 border-purple-500 w-9 h-9 sm:w-12 sm:h-12 rounded-full flex justify-center items-center z-20 shadow-[0_0_15px_rgba(130,69,236,0.6)]">
                   <img
                     src={experience.img}
                     alt={experience.company}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 </div>
 
-                {/* Role, Company Name, and Date */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-semibold text-white">
-                      {experience.role}
-                    </h3>
-                    <h4 className="text-md sm:text-sm text-gray-300">
-                      {experience.company}
-                    </h4>
+                {/* Content Card Container */}
+                <div
+                  className={`w-[calc(100%-2.5rem)] sm:w-[calc(100%-3.5rem)] md:w-[45%] ml-10 sm:ml-14 md:ml-0 ${
+                    isEven ? "md:mr-auto" : "md:ml-auto"
+                  }`}
+                >
+                  <div className="bg-[#0d081f]/90 backdrop-blur-md p-5 sm:p-7 rounded-2xl border border-purple-500/20 shadow-[0_0_20px_rgba(130,69,236,0.15)] hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(130,69,236,0.3)] transition-all duration-300 transform hover:-translate-y-1">
+                    {/* Header */}
+                    <div className="flex items-start sm:items-center space-x-4 mb-4">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/10 rounded-xl p-1.5 flex-shrink-0 border border-purple-500/20 flex items-center justify-center">
+                        <img
+                          src={experience.img}
+                          alt={experience.company}
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg sm:text-xl font-bold text-white leading-snug truncate">
+                          {experience.role}
+                        </h3>
+                        <h4 className="text-sm font-medium text-purple-400">
+                          {experience.company}
+                        </h4>
+                        <span className="inline-block text-xs text-gray-400 mt-1">
+                          {experience.date}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs sm:text-sm text-gray-300/90 leading-relaxed mb-4">
+                      {experience.desc}
+                    </p>
+
+                    {/* Skills Badges */}
+                    <div>
+                      <h5 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+                        Skills Applied:
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                        {experience.skills.map((skill, sIdx) => (
+                          <span
+                            key={sIdx}
+                            className="bg-[#1a1435] text-purple-300 px-2.5 py-1 text-xs rounded-lg border border-purple-500/20 font-medium"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                  {/* Date at the bottom */}
-                  <p className="text-sm text-gray-500 mt-2">{experience.date}</p>
                 </div>
               </div>
-
-              <p className="mt-4 text-gray-400">{experience.desc}</p>
-              <div className="mt-4">
-                <h5 className="font-medium text-white">Skills:</h5>
-                <ul className="flex flex-wrap mt-2">
-                  {experience.skills.map((skill, index) => (
-                    <li
-                      key={index}
-                      className="bg-[#8245ec] text-gray-300 px-4 py-1 text-xs sm:text-sm rounded-lg mr-2 mb-2 border border-gray-400"
-                    >
-                      {skill}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
     </section>
   );
