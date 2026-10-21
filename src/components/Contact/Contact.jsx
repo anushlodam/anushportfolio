@@ -7,47 +7,124 @@ const Contact = () => {
   const form = useRef();
   const [isSending, setIsSending] = useState(false);
 
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
     setIsSending(true);
 
-    emailjs
-      .sendForm(
-        "service_8fi4iov",  // EmailJS Service ID
-        "template_6aqusyb",  // EmailJS Template ID
-        form.current,
-        "ATS0QR0jjiI3OPVUs"  // EmailJS Public Key
-      )
-      .then(
-        () => {
-          setIsSending(false);
-          if (form.current) {
-            form.current.reset();
-          }
-          toast.success("Message sent successfully! 🚀", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-          });
+    const formElements = form.current;
+    const userName = formElements.user_name.value;
+    const userEmail = formElements.user_email.value;
+    const subject = formElements.subject.value;
+    const message = formElements.message.value;
+
+    const payload = {
+      Name: userName,
+      Email: userEmail,
+      Subject: subject,
+      Message: message,
+      _replyto: userEmail,
+      _subject: `Portfolio Message from ${userName}: ${subject}`,
+      _captcha: "false",
+      _template: "table",
+    };
+
+    // 1. Try sending directly to anushlodam@gmail.com via FormSubmit
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/anushlodam@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
-        (error) => {
-          setIsSending(false);
-          console.error("Error sending message:", error);
-          toast.error("Failed to send message. Please try again or email directly.", {
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (data.success === "true" || data.success === true) {
+        setIsSending(false);
+        formElements.reset();
+        toast.success("Message sent successfully to anushlodam@gmail.com! 🚀", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+        return;
+      }
+
+      // Check if FormSubmit needs 1-time activation
+      if (data.message && data.message.toLowerCase().includes("activation")) {
+        setIsSending(false);
+        toast.warning(
+          "Activation required! Please check anushlodam@gmail.com and click 'Activate Form' once.",
+          {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 8000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             theme: "dark",
-          });
-        }
-      );
+          }
+        );
+        return;
+      }
+
+      throw new Error(data.message || "FormSubmit failed");
+    } catch (err) {
+      console.warn("FormSubmit attempt failed, attempting EmailJS fallback...", err);
+
+      // 2. Fallback to EmailJS
+      try {
+        await emailjs.sendForm(
+          "service_8fi4iov",
+          "template_6aqusyb",
+          formElements,
+          "ATS0QR0jjiI3OPVUs"
+        );
+        setIsSending(false);
+        formElements.reset();
+        toast.success("Message sent successfully! 🚀", {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "dark",
+        });
+      } catch (emailJsError) {
+        setIsSending(false);
+        console.error("Both services failed:", err, emailJsError);
+
+        toast.error(
+          "Unable to send automatically. Please check your Gmail activation or click below to email directly.",
+          {
+            position: "top-right",
+            autoClose: 6000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "dark",
+          }
+        );
+
+        // Fallback open mailto
+        window.open(
+          `mailto:anushlodam@gmail.com?subject=${encodeURIComponent(
+            subject
+          )}&body=${encodeURIComponent(
+            `Name: ${userName}\nEmail: ${userEmail}\n\nMessage:\n${message}`
+          )}`,
+          "_blank"
+        );
+      }
+    }
   };
 
   return (
